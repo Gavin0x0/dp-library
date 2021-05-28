@@ -65,7 +65,7 @@ export default {
   methods: {},
   setup() {
     const router = useRouter();
-    const cardsData = ref(null);
+    const cardsData = ref([]);
     onMounted(() => {
       var Mock = require("mockjs");
       var Random = Mock.Random;
@@ -77,7 +77,6 @@ export default {
         },
       });
       console.log("onMounted");
-      let mockData = [];
       let size = 50;
       for (let i = 0; i <= size; i++) {
         console.log(Random.date());
@@ -94,9 +93,8 @@ export default {
           phone_num: Random.phone(),
           available_status: Random.boolean(),
         };
-        mockData.push(mockCard);
+        cardsData.value.push(mockCard);
       }
-      cardsData.value = mockData;
     });
     function gotoCreateCard() {
       router.push({ path: "/" });
