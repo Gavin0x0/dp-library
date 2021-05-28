@@ -1,5 +1,4 @@
 /* eslint-disable*/
-import axios from "axios";
 import { get, post, getImg, getFile, postFile } from "./http";
 
 /**

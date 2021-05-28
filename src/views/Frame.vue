@@ -2,7 +2,9 @@
   <el-container>
     <el-header><nav-menu></nav-menu></el-header>
     <el-main><router-view></router-view></el-main>
-    <el-footer>Copyright © 2021, NFT-GO. Powered by Vue</el-footer>
+    <el-footer
+      >Copyright © 2021, DP公司图书馆管理系统. Powered by Vue</el-footer
+    >
   </el-container>
 </template>
 
@@ -18,7 +20,6 @@ export default {
 .el-header,
 .el-footer {
   background-color: #0000001a;
-
   text-align: center;
   font-size: 0.5rem;
   line-height: 4vh;
@@ -43,7 +44,6 @@ export default {
 .el-main {
   background-color: #eeeeee;
   color: #303841;
-  text-align: center;
   margin-top: 6vh;
   height: 90vh;
 }
