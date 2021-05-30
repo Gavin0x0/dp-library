@@ -7,6 +7,7 @@ import CardMgr from "../views/CardMgr.vue";
 import FineMgr from "../views/FineMgr.vue";
 import RenewMgr from "../views/RenewMgr.vue";
 import ReturnMgr from "../views/ReturnMgr.vue";
+import CreateCard from "../views/CreateCard.vue";
 
 const routes = [
   {
@@ -27,6 +28,11 @@ const routes = [
     path: "/card-management",
     name: "CardMgr",
     component: CardMgr,
+  },
+  {
+    path: "/create-card",
+    name: "CreateCard",
+    component: CreateCard,
   },
   {
     path: "/book-management",

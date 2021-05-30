@@ -11,14 +11,14 @@ if (process.env.NODE_ENV === "production") {
   /*第二层if，根据.env文件中的VUE_APP_FLAG判断是生产环境还是测试环境*/
   if (process.env.VUE_APP_FLAG === "pro") {
     //production 生产环境
-    axios.defaults.baseURL = "https://nft_api.632891553.xyz";
+    axios.defaults.baseURL = "https://dp_api.632891553.xyz";
   } else {
     //test 测试环境
-    axios.defaults.baseURL = "https://nft_api.632891553.xyz";
+    axios.defaults.baseURL = "https://dp_api.632891553.xyz";
   }
 } else {
   //dev 开发环境
-  axios.defaults.baseURL = "http://127.0.0.1:8000";
+  axios.defaults.baseURL = "http://localhost:8000";
 }
 
 // 响应拦截器

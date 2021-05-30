@@ -1,5 +1,6 @@
 <template>
   <h1>借阅证管理</h1>
+  <router-view></router-view>
   <el-button
     type="primary"
     plain
@@ -7,14 +8,8 @@
     style="margin-bottom: 20px"
     >创建借阅证</el-button
   >
-  <el-table
-    :data="cardsData"
-    style="width: 100%"
-    max-height="700"
-    size="mini"
-    align="center"
-  >
-    <el-table-column fixed prop="card_id" label="借阅证编号" width="300">
+  <el-table :data="cardsData" style="width: 100%" size="mini" align="left">
+    <el-table-column prop="card_id" label="借阅证编号" width="300">
     </el-table-column>
     <el-table-column prop="reader_name" label="姓名" width="100">
     </el-table-column>
@@ -55,58 +50,85 @@
       </template>
     </el-table-column>
   </el-table>
+  <el-pagination
+    @size-change="handleSizeChange"
+    @current-change="handleCurrentChange"
+    :current-page="queryData.page"
+    :page-sizes="[20, 50, 100, 200]"
+    :page-size="queryData.size"
+    layout="prev, pager, next, jumper, ->, total, sizes"
+    :total="dataSize"
+  >
+  </el-pagination>
 </template>
 
 <script>
 import { onMounted } from "@vue/runtime-core";
+import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { queryLibCard } from "../api/index";
 export default {
   methods: {},
   setup() {
     const router = useRouter();
-    const cardsData = ref([]);
-    onMounted(() => {
-      var Mock = require("mockjs");
-      var Random = Mock.Random;
-      //扩展函数：手机号生成
-      Mock.Random.extend({
-        phone: function () {
-          var phonePrefixs = ["138", "187", "189"]; // 自己写前缀哈
-          return this.pick(phonePrefixs) + Mock.mock(/\d{8}/); //Number()
-        },
-      });
-      console.log("onMounted");
-      let size = 50;
-      for (let i = 0; i <= size; i++) {
-        console.log(Random.date());
-        let mockCard = {
-          card_id: Random.guid(),
-          reader_name: Random.cname(),
-          reader_sex: Random.string("男女", 1, 1),
-          reader_id: Random.id(),
-          unit_name: "DP公司",
-          create_date: Random.date(),
-          reader_type: "普通员工",
-          max_borr: 3,
-          debt_count: 0.0,
-          phone_num: Random.phone(),
-          available_status: Random.boolean(),
-        };
-        cardsData.value.push(mockCard);
-      }
+    const cardsData = ref([]); //表格数据
+    const dataSize = ref(0); //数据总条数
+    const queryData = ref({
+      card_id: "",
+      reader_name: "",
+      reader_sex: "",
+      reader_id: "",
+      unit_name: "",
+      reader_type: "",
+      phone_num: "",
+      available_status: true,
+      page: 1,
+      size: 20,
     });
+    onMounted(() => {
+      getCard();
+    });
+    function handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      queryData.value.size = val;
+      getCard();
+    }
+    function handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      queryData.value.page = val;
+      getCard();
+    }
+    function getCard() {
+      let jsonData = JSON.stringify(queryData.value);
+      console.log(jsonData);
+      queryLibCard(jsonData)
+        .then((res) => {
+          console.log(res);
+          cardsData.value = res.data;
+          dataSize.value = res.data_count;
+        })
+        .catch((failResponse) => {
+          console.log(failResponse);
+          ElMessage.error("获取信息失败，服务器错误，请联系管理员");
+          ElMessage.error(failResponse.statusText);
+        });
+    }
     function gotoCreateCard() {
-      router.push({ path: "/" });
+      router.push({ path: "/create-card" });
     }
     function deleteCard(index) {
       console.log("删除：", index);
       cardsData.value.splice(index, 1);
     }
     return {
+      dataSize,
+      queryData,
       cardsData,
       deleteCard,
       gotoCreateCard,
+      handleSizeChange,
+      handleCurrentChange,
     };
   },
 };
