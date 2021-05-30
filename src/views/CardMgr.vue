@@ -54,7 +54,7 @@
     @size-change="handleSizeChange"
     @current-change="handleCurrentChange"
     :current-page="queryData.page"
-    :page-sizes="[20, 50, 100, 200]"
+    :page-sizes="[10, 20, 50, 100]"
     :page-size="queryData.size"
     layout="prev, pager, next, jumper, ->, total, sizes"
     :total="dataSize"
@@ -69,7 +69,6 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { queryLibCard } from "../api/index";
 export default {
-  methods: {},
   setup() {
     const router = useRouter();
     const cardsData = ref([]); //表格数据
@@ -82,9 +81,9 @@ export default {
       unit_name: "",
       reader_type: "",
       phone_num: "",
-      available_status: true,
+      available_status: null,
       page: 1,
-      size: 20,
+      size: 10,
     });
     onMounted(() => {
       getCard();

@@ -8,6 +8,7 @@ import FineMgr from "../views/FineMgr.vue";
 import RenewMgr from "../views/RenewMgr.vue";
 import ReturnMgr from "../views/ReturnMgr.vue";
 import CreateCard from "../views/CreateCard.vue";
+import CreateBook from "../views/CreateBook.vue";
 
 const routes = [
   {
@@ -38,6 +39,11 @@ const routes = [
     path: "/book-management",
     name: "BookMgr",
     component: BookMgr,
+  },
+  {
+    path: "/create-book",
+    name: "CreateBook",
+    component: CreateBook,
   },
   {
     path: "/borrow-management",

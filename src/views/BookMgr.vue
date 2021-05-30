@@ -6,15 +6,9 @@
     plain
     @click="gotoCreateBook"
     style="margin-bottom: 20px"
-    >创建图书</el-button
+    >录入图书</el-button
   >
-  <el-table
-    :data="booksData"
-    style="width: 100%"
-    max-height="700"
-    size="mini"
-    align="left"
-  >
+  <el-table :data="booksData" style="width: 100%" size="mini" align="left">
     <el-table-column prop="book_id" label="图书编号" width="300">
     </el-table-column>
     <el-table-column prop="book_name" label="书名" width="200">
@@ -51,38 +45,71 @@
       </template>
     </el-table-column>
   </el-table>
+  <el-pagination
+    @size-change="handleSizeChange"
+    @current-change="handleCurrentChange"
+    :current-page="queryData.page"
+    :page-sizes="[10, 20, 50, 100]"
+    :page-size="queryData.size"
+    layout="prev, pager, next, jumper, ->, total, sizes"
+    :total="dataSize"
+  >
+  </el-pagination>
 </template>
 
 <script>
 import { onMounted } from "@vue/runtime-core";
+import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { queryBook } from "../api/index";
+
 export default {
-  methods: {},
   setup() {
     const router = useRouter();
     const booksData = ref([]);
-    onMounted(() => {
-      var Mock = require("mockjs");
-      var Random = Mock.Random;
-      console.log("onMounted");
-      let size = 20;
-      for (let i = 0; i <= size; i++) {
-        console.log(Random.date());
-        let mockBook = {
-          book_id: Random.guid(),
-          book_name: "《" + Random.csentence(3, 6).split("。")[0] + "》",
-          book_author: Random.cname(),
-          publisher: "DP公司出版社",
-          pub_date: Random.date(),
-          page_count: Random.natural(100, 500),
-          book_price: Random.natural(60, 100) + "元",
-          ibsn: Random.natural(2000000000, 9000000000),
-          available_status: Random.boolean(),
-        };
-        booksData.value.push(mockBook);
-      }
+    const dataSize = ref(0); //数据总条数
+    const queryData = ref({
+      book_id: "",
+      book_name: "",
+      book_author: "",
+      publisher: "",
+      pub_date: "",
+      page_count: "",
+      book_price: "",
+      isbn: "",
+      available_status: null,
+      page: 1,
+      size: 10,
     });
+    onMounted(() => {
+      getBook();
+    });
+    function handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      queryData.value.size = val;
+      getBook();
+    }
+    function handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      queryData.value.page = val;
+      getBook();
+    }
+    function getBook() {
+      let jsonData = JSON.stringify(queryData.value);
+      console.log(jsonData);
+      queryBook(jsonData)
+        .then((res) => {
+          console.log(res);
+          booksData.value = res.data;
+          dataSize.value = res.data_count;
+        })
+        .catch((failResponse) => {
+          console.log(failResponse);
+          ElMessage.error("获取信息失败，服务器错误，请联系管理员");
+          ElMessage.error(failResponse.statusText);
+        });
+    }
     function gotoCreateBook() {
       router.push({ path: "/create-book" });
     }
@@ -91,9 +118,13 @@ export default {
       booksData.value.splice(index, 1);
     }
     return {
+      dataSize,
+      queryData,
       booksData,
       deleteBook,
       gotoCreateBook,
+      handleSizeChange,
+      handleCurrentChange,
     };
   },
 };

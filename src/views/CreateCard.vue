@@ -154,6 +154,11 @@ export default {
       createLibCard(jsonData)
         .then((res) => {
           console.log(res);
+          if (res.success) {
+            ElMessage.success(res.msg);
+          } else {
+            ElMessage.error(res.msg);
+          }
         })
         .catch((failResponse) => {
           console.log(failResponse);
