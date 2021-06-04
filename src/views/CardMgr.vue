@@ -8,28 +8,63 @@
     style="margin-bottom: 20px"
     >创建借阅证</el-button
   >
-  <el-table :data="cardsData" style="width: 100%" size="mini" align="left">
-    <el-table-column prop="card_id" label="借阅证编号" width="300">
+  <el-table
+    border
+    :data="cardsData"
+    style="width: 100%"
+    size="mini"
+    align="left"
+  >
+    <el-table-column prop="card_id" label="借阅证编号" width="280">
     </el-table-column>
-    <el-table-column prop="reader_name" label="姓名" width="100">
+    <el-table-column prop="reader_name" label="姓名" align="center">
     </el-table-column>
-    <el-table-column prop="reader_sex" label="性别" width="100">
+    <el-table-column prop="reader_sex" label="性别" width="60" align="center">
     </el-table-column>
-    <el-table-column prop="reader_id" label="身份证" width="200">
+    <el-table-column prop="reader_id" label="身份证" width="160" align="center">
     </el-table-column>
-    <el-table-column prop="unit_name" label="单位" width="200">
+    <el-table-column prop="unit_name" label="单位"> </el-table-column>
+    <el-table-column
+      prop="create_date"
+      label="办证日期"
+      width="100"
+      align="center"
+    >
     </el-table-column>
-    <el-table-column prop="create_date" label="办证日期" width="120">
+    <el-table-column
+      prop="reader_type"
+      label="读者类型"
+      width="80"
+      align="center"
+    >
     </el-table-column>
-    <el-table-column prop="reader_type" label="读者类型" width="120">
+    <el-table-column
+      prop="max_borr"
+      label="最大借书数"
+      width="100"
+      align="center"
+    >
     </el-table-column>
-    <el-table-column prop="max_borr" label="最大借书数" width="80">
+    <el-table-column
+      prop="debt_count"
+      label="欠款金额"
+      width="80"
+      align="center"
+    >
     </el-table-column>
-    <el-table-column prop="debt_count" label="欠款金额" width="120">
+    <el-table-column
+      prop="phone_num"
+      label="联系电话"
+      width="120"
+      align="center"
+    >
     </el-table-column>
-    <el-table-column prop="phone_num" label="联系电话" width="120">
-    </el-table-column>
-    <el-table-column prop="available_status" label="可用状态" width="120">
+    <el-table-column
+      prop="available_status"
+      label="可用状态"
+      width="80"
+      align="center"
+    >
       <template #default="scope">
         <el-tag
           size="medium"
@@ -38,7 +73,7 @@
         >
       </template>
     </el-table-column>
-    <el-table-column fixed="right" label="操作" width="80">
+    <el-table-column fixed="right" label="操作" width="80" align="center">
       <template #default="scope">
         <el-button
           @click.prevent="deleteCard(scope.$index)"

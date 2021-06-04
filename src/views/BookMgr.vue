@@ -8,23 +8,34 @@
     style="margin-bottom: 20px"
     >录入图书</el-button
   >
-  <el-table :data="booksData" style="width: 100%" size="mini" align="left">
-    <el-table-column prop="book_id" label="图书编号" width="300">
+  <el-table
+    :data="booksData"
+    style="width: 100%"
+    size="mini"
+    align="left"
+    border
+  >
+    <el-table-column prop="book_id" label="图书编号" width="280">
     </el-table-column>
-    <el-table-column prop="book_name" label="书名" width="200">
+    <el-table-column prop="book_name" label="书名" align="center">
     </el-table-column>
-    <el-table-column prop="book_author" label="作者" width="100">
+    <el-table-column prop="book_author" label="作者" width="100" align="center">
     </el-table-column>
-    <el-table-column prop="publisher" label="出版社" width="200">
+    <el-table-column prop="publisher" label="出版社" align="center">
     </el-table-column>
-    <el-table-column prop="pub_date" label="出版日期" width="200">
+    <el-table-column prop="pub_date" label="出版日期" width="120">
     </el-table-column>
-    <el-table-column prop="page_count" label="页数" width="120">
+    <el-table-column prop="page_count" label="页数" width="60" align="center">
     </el-table-column>
-    <el-table-column prop="book_price" label="价格" width="120">
+    <el-table-column prop="book_price" label="价格" width="60" align="center">
     </el-table-column>
-    <el-table-column prop="ibsn" label="IBSN" width="180"> </el-table-column>
-    <el-table-column prop="available_status" label="在库状态" width="120">
+    <el-table-column prop="isbn" label="ISBN" width="120"> </el-table-column>
+    <el-table-column
+      prop="available_status"
+      label="在库状态"
+      width="80"
+      align="center"
+    >
       <template #default="scope">
         <el-tag
           size="medium"
@@ -33,7 +44,7 @@
         >
       </template>
     </el-table-column>
-    <el-table-column fixed="right" label="操作" width="80">
+    <el-table-column fixed="right" label="操作" width="80" align="center">
       <template #default="scope">
         <el-button
           @click.prevent="deleteBook(scope.$index)"

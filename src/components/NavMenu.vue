@@ -12,7 +12,7 @@
     <el-menu-item index="/">首页</el-menu-item>
     <el-menu-item index="/card-management">借阅证管理</el-menu-item>
     <el-menu-item index="/book-management">图书管理</el-menu-item>
-    <el-menu-item index="/borrow-management">借书管理</el-menu-item>
+    <el-menu-item index="/borrow-management">借/续/还 管理</el-menu-item>
     <el-menu-item index="/renew-management">续借管理</el-menu-item>
     <el-menu-item index="/return-management">还书管理</el-menu-item>
     <el-menu-item index="/fine-management">罚款管理</el-menu-item>
