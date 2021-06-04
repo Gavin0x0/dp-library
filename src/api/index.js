@@ -57,3 +57,12 @@ export const queryLibCard = (data) => post(`queryLibCard`, data);
  */
 export const queryBook = (data) => post(`queryBook`, data);
 
+/**
+ * 查询借阅证详情（GET）  
+ * 参数：
+ * card_id: str  
+ * @param {URLSearchParams} params
+ * @returns
+ */
+export const getLibCardDetail = (params) => get(`LibCardDetail`, params);
+

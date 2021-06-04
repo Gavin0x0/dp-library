@@ -37,7 +37,7 @@
         <i class="el-icon-office-building"></i>
         已借书数
       </template>
-      0
+      {{ cardContent.borr_num }}
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>
@@ -54,7 +54,7 @@
 import { onUpdated } from "@vue/runtime-core";
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
-import { queryLibCard } from "../api/index";
+import { getLibCardDetail } from "../api/index";
 export default {
   props: { card_id: String },
   setup(props, context) {
@@ -74,13 +74,10 @@ export default {
       getCard();
     });
     function getCard() {
-      let jsonData = JSON.stringify({
-        card_id: props.card_id,
-        size: 1,
-        page: 1,
-      });
-      console.log(jsonData);
-      queryLibCard(jsonData)
+      let params = new URLSearchParams();
+      params.append("card_id", props.card_id);
+      console.log(params);
+      getLibCardDetail(params)
         .then((res) => {
           console.log(res);
           if (res.data.length > 0) {
