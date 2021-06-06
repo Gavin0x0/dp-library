@@ -1,6 +1,5 @@
 <template>
   <h1>图书管理</h1>
-  <router-view></router-view>
   <el-button
     type="primary"
     plain
@@ -8,6 +7,46 @@
     style="margin-bottom: 20px"
     >录入图书</el-button
   >
+  <el-form :inline="true" size="mini" :model="queryData">
+    <el-form-item label="图书编号:">
+      <el-input
+        v-model="queryData.book_id"
+        placeholder="输入图书编号"
+      ></el-input>
+    </el-form-item>
+    <el-form-item label="书名:">
+      <el-input v-model="queryData.book_name" placeholder="输入书名"></el-input>
+    </el-form-item>
+    <el-form-item label="作者:">
+      <el-input
+        v-model="queryData.book_author"
+        placeholder="输入作者"
+      ></el-input>
+    </el-form-item>
+    <el-form-item label="出版社:">
+      <el-input
+        v-model="queryData.publisher"
+        placeholder="输入出版社"
+      ></el-input>
+    </el-form-item>
+    <el-form-item label="ISBN:">
+      <el-input v-model="queryData.isbn" placeholder="输入ISBN"></el-input>
+    </el-form-item>
+
+    <el-form-item label="书名:">
+      <el-input v-model="queryData.book_name" placeholder="输入书名"></el-input>
+    </el-form-item>
+    <el-form-item label="在库状态:">
+      <el-select v-model="queryData.available_status" placeholder="在库状态">
+        <el-option label="默认" value=""></el-option>
+        <el-option label="在库" value="true"></el-option>
+        <el-option label="不在库" value="false"></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="getCard">查询</el-button>
+    </el-form-item>
+  </el-form>
   <el-table
     :data="booksData"
     style="width: 100%"

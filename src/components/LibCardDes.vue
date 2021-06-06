@@ -79,7 +79,7 @@ export default {
       console.log(params);
       getLibCardDetail(params)
         .then((res) => {
-          console.log(res);
+          console.log("getLibCardDetail", res);
           if (res.data.length > 0) {
             cardContent.value = res.data[0];
             ElMessage.success("查询成功");

@@ -1,12 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import BookMgr from "../views/BookMgr.vue";
-import BookQuery from "../views/BookQuery.vue";
 import BorrowMgr from "../views/BorrowMgr.vue";
+import OperationPage from "../views/OperationPage.vue";
 import CardMgr from "../views/CardMgr.vue";
 import FineMgr from "../views/FineMgr.vue";
-import RenewMgr from "../views/RenewMgr.vue";
-import ReturnMgr from "../views/ReturnMgr.vue";
 import CreateCard from "../views/CreateCard.vue";
 import CreateBook from "../views/CreateBook.vue";
 
@@ -51,24 +49,15 @@ const routes = [
     component: BorrowMgr,
   },
   {
-    path: "/renew-management",
-    name: "RenewMgr",
-    component: RenewMgr,
+    path: "/operation-page",
+    name: "OperationPage",
+    component: OperationPage,
   },
-  {
-    path: "/return-management",
-    name: "ReturnMgr",
-    component: ReturnMgr,
-  },
+
   {
     path: "/fine-management",
     name: "FineMgr",
     component: FineMgr,
-  },
-  {
-    path: "/book-query",
-    name: "BookQuery",
-    component: BookQuery,
   },
 ];
 

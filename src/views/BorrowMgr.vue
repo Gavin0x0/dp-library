@@ -1,101 +1,137 @@
 <template>
-  <h1>借/续/还 管理</h1>
-  <el-row :gutter="20">
-    <el-col :span="12">
-      <div class="buttons-container">
-        <el-button type="success" plain>借出图书</el-button>
-        <el-button type="primary" plain>续借图书</el-button>
-        <el-button type="danger" plain>缴纳罚金</el-button>
-      </div>
-    </el-col>
-    <el-col :span="12">
-      <div class="buttons-container">
-        <el-button type="warning" plain>还书入库</el-button>
-      </div>
-    </el-col>
-  </el-row>
-  <el-row :gutter="20">
-    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12"
-      ><el-form :inline="true" :model="queryForm" class="demo-form-inline">
-        <el-form-item label="输入借阅卡号">
-          <el-input
-            v-model="queryForm.card"
-            placeholder="请输入卡号"
-            style="width: 20vw"
-          ></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onQueryCard">查询</el-button>
-        </el-form-item>
-      </el-form>
-      <lib-card-des :card_id="card_id" @fun="getStatusFromCard"></lib-card-des>
-      <books-on-loan :card_id="card_id" ref="booksOnLoan"></books-on-loan>
-    </el-col>
-    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12"
-      ><el-form :inline="true" :model="queryForm" class="demo-form-inline">
-        <el-form-item label="输入图书编号">
-          <el-input
-            v-model="queryForm.book"
-            placeholder="请输入编号"
-            style="width: 20vw"
-          ></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onQueryBook">查询</el-button>
-        </el-form-item>
-      </el-form>
-      <book-des :book_id="book_id" @fun="getStatusFromCard"></book-des>
-    </el-col>
-  </el-row>
+  <h1>借阅管理</h1>
+  <el-table
+    :data="borrInfoData"
+    style="width: 100%"
+    size="mini"
+    align="left"
+    border
+  >
+    <el-table-column prop="book_id" label="图书编号" width="280">
+    </el-table-column>
+    <el-table-column prop="book_name" label="书名" align="center">
+    </el-table-column>
+    <el-table-column
+      prop="reader_name"
+      label="借阅人"
+      width="100"
+      align="center"
+    >
+    </el-table-column>
+    <el-table-column prop="card_id" label="借阅卡编号" width="280">
+    </el-table-column>
+    <el-table-column
+      prop="borr_date"
+      label="借阅日期"
+      width="100"
+      align="center"
+    >
+    </el-table-column>
+    <el-table-column
+      prop="due_date"
+      label="应还日期"
+      width="100"
+      align="center"
+    >
+    </el-table-column>
+    <el-table-column
+      prop="return_date"
+      label="归还日期"
+      width="100"
+      align="center"
+    >
+    </el-table-column>
+    <el-table-column
+      prop="return_status"
+      label="归还状态"
+      width="80"
+      align="center"
+    >
+      <template #default="scope">
+        <el-tag
+          size="medium"
+          :type="scope.row.available_status ? 'success' : 'danger'"
+          >{{ scope.row.available_status ? "已还" : "未还" }}</el-tag
+        >
+      </template>
+    </el-table-column>
+  </el-table>
+  <el-pagination
+    @size-change="handleSizeChange"
+    @current-change="handleCurrentChange"
+    :current-page="queryData.page"
+    :page-sizes="[10, 20, 50, 100]"
+    :page-size="queryData.size"
+    layout="prev, pager, next, jumper, ->, total, sizes"
+    :total="dataSize"
+  >
+  </el-pagination>
 </template>
 
 <script>
-import BookDes from "../components/BookDes.vue";
-import LibCardDes from "../components/LibCardDes.vue";
-import BooksOnLoan from "../components/BooksOnLoan";
+import { onMounted } from "@vue/runtime-core";
+import { ElMessage } from "element-plus";
 import { ref } from "vue";
+import { queryBorrInfo } from "../api/index";
+
 export default {
-  components: { LibCardDes, BookDes, BooksOnLoan },
   setup() {
-    const card_id = ref("");
-    const book_id = ref("");
-    const queryForm = ref({
-      card: "",
-      book: "",
+    const borrInfoData = ref([]);
+    const dataSize = ref(0); //数据总条数
+    const queryData = ref({
+      book_id: "CEB3d406-7f3e-4cAF-85dd-d66Ef1eF15C3",
+      book_name: "《论节深带生》",
+      reader_name: "韩明",
+      card_id: "2b28DCc1-E4e4-411b-d230-82b89B44a9bC",
+      renew_new: 0,
+      borr_date: "2021-05-31",
+      due_date: "2021-06-20",
+      return_date: "2021-06-10",
+      return_status: false,
+      page: 1,
+      size: 10,
     });
-    const booksOnLoan = ref();
-    function onQueryCard() {
-      console.log("onQueryCard");
-      card_id.value = queryForm.value.card;
-      booksOnLoan.value.getLoanBook();
+    onMounted(() => {
+      getBorrInfo();
+    });
+    function handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      queryData.value.size = val;
+      getBorrInfo();
     }
-    function onQueryBook() {
-      console.log("onQueryBook");
-      book_id.value = queryForm.value.book;
+    function handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      queryData.value.page = val;
+      getBorrInfo();
     }
-    // 监听子组件抛出的借阅卡状态参数
-    const getStatusFromCard = (e) => {
-      console.log("子组件给的值：", e);
-    };
-    //监听子组件抛出的书籍状态参数
-    function getStatusFromBook(params) {
-      console.log("get from book", params);
+    function getBorrInfo() {
+      let jsonData = JSON.stringify(queryData.value);
+      console.log(jsonData);
+      queryBorrInfo(jsonData)
+        .then((res) => {
+          console.log(res);
+          borrInfoData.value = [queryData.value, queryData.value];
+          dataSize.value = res.data_count;
+        })
+        .catch((failResponse) => {
+          console.log(failResponse);
+          ElMessage.error("获取信息失败，服务器错误，请联系管理员");
+          ElMessage.error(failResponse.statusText);
+        });
     }
     return {
-      card_id,
-      book_id,
-      onQueryCard,
-      onQueryBook,
-      queryForm,
-      getStatusFromCard,
-      getStatusFromBook,
-      booksOnLoan,
+      dataSize,
+      queryData,
+      borrInfoData,
+      handleSizeChange,
+      handleCurrentChange,
     };
   },
 };
 </script>
+
 <style>
-.buttons-container {
-  margin: 0 0 30px 0;
+.el-table {
+  background: rgb(228, 189, 117);
 }
 </style>

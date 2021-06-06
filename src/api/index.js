@@ -66,3 +66,27 @@ export const queryBook = (data) => post(`queryBook`, data);
  */
 export const getLibCardDetail = (params) => get(`LibCardDetail`, params);
 
+/**
+ * 查询借阅信息（POST）
+ * 参数：
+ * field: str
+ * password: str
+ * order: 排序方式（可选） 
+ * field: 排序字段（可选） 
+ * @param {JSON} data
+ * @returns
+ */
+ export const queryBorrInfo = (data) => post(`queryBorrInfo`, data);
+
+/**
+ * 查询借阅信息（POST）
+ * 参数：
+ * field: str
+ * password: str
+ * order: 排序方式（可选） 
+ * field: 排序字段（可选） 
+ * @param {JSON} data
+ * @returns
+ */
+ export const queryFineInfo = (data) => post(`queryFineInfo`, data);
+

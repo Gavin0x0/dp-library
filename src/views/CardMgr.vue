@@ -1,6 +1,5 @@
 <template>
   <h1>借阅证管理</h1>
-  <router-view></router-view>
   <el-button
     type="primary"
     plain
@@ -8,6 +7,55 @@
     style="margin-bottom: 20px"
     >创建借阅证</el-button
   >
+  <el-form :inline="true" size="mini" :model="queryData">
+    <el-form-item label="借阅证编号:">
+      <el-input
+        v-model="queryData.card_id"
+        placeholder="输入借阅证编号"
+      ></el-input>
+    </el-form-item>
+    <el-form-item label="姓名:">
+      <el-input
+        v-model="queryData.reader_name"
+        placeholder="输入姓名"
+      ></el-input>
+    </el-form-item>
+    <el-form-item label="性别:">
+      <el-select v-model="queryData.reader_sex" placeholder="选择性别">
+        <el-option label="默认" value=""></el-option>
+        <el-option label="男" value="男"></el-option>
+        <el-option label="女" value="女"></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="身份证号:">
+      <el-input
+        v-model="queryData.reader_id"
+        placeholder="输入身份证号"
+      ></el-input>
+    </el-form-item>
+    <el-form-item label="单位名:">
+      <el-input
+        v-model="queryData.unit_name"
+        placeholder="输入单位名"
+      ></el-input>
+    </el-form-item>
+    <el-form-item label="联系电话:">
+      <el-input
+        v-model="queryData.phone_num"
+        placeholder="输入联系电话"
+      ></el-input>
+    </el-form-item>
+    <el-form-item label="可用状态:">
+      <el-select v-model="queryData.available_status" placeholder="可用状态">
+        <el-option label="默认" value=""></el-option>
+        <el-option label="可用" value="true"></el-option>
+        <el-option label="不可用" value="false"></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="getCard">查询</el-button>
+    </el-form-item>
+  </el-form>
   <el-table
     border
     :data="cardsData"
@@ -159,6 +207,7 @@ export default {
       dataSize,
       queryData,
       cardsData,
+      getCard,
       deleteCard,
       gotoCreateCard,
       handleSizeChange,
