@@ -40,7 +40,6 @@
       >
     </el-descriptions-item>
   </el-descriptions>
-  <h5>{{ "Debug book_id:" + book_id }}</h5>
 </template>
 
 <script>
@@ -62,13 +61,12 @@ export default {
     });
     onUpdated(() => {
       console.log("Book Descriptions Update!", props.book_id);
-      getBook();
       sendStatusBack();
     });
 
-    function getBook() {
+    const getBook = (book_id) => {
       let jsonData = JSON.stringify({
-        book_id: props.book_id,
+        book_id: book_id,
         size: 1,
         page: 1,
       });
@@ -88,13 +86,14 @@ export default {
           ElMessage.error("获取信息失败，服务器错误，请联系管理员");
           ElMessage.error(failResponse.statusText);
         });
-    }
+    };
     //向父组件返回借阅卡状态
     function sendStatusBack() {
       context.emit("fun", "hello father");
     }
     return {
       bookContent,
+      getBook,
     };
   },
 };

@@ -47,7 +47,6 @@
       {{ cardContent.max_borr }}
     </el-descriptions-item>
   </el-descriptions>
-  <h5>{{ "Debug card_id:" + card_id }}</h5>
 </template>
 
 <script>
@@ -71,11 +70,10 @@ export default {
     onUpdated(() => {
       console.log("Card Descriptions Update!", props.card_id);
       sendStatusBack();
-      getCard();
     });
-    function getCard() {
+    const getCard = (card_id) => {
       let params = new URLSearchParams();
-      params.append("card_id", props.card_id);
+      params.append("card_id", card_id);
       console.log(params);
       getLibCardDetail(params)
         .then((res) => {
@@ -92,13 +90,14 @@ export default {
           ElMessage.error("获取信息失败，服务器错误，请联系管理员");
           ElMessage.error(failResponse.statusText);
         });
-    }
+    };
     //向父组件返回借阅卡状态
     function sendStatusBack() {
       context.emit("fun", "hello father");
     }
     return {
       cardContent,
+      getCard,
     };
   },
 };

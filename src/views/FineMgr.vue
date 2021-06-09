@@ -52,8 +52,8 @@
       <template #default="scope">
         <el-tag
           size="medium"
-          :type="scope.row.available_status ? 'success' : 'danger'"
-          >{{ scope.row.available_status ? "已缴" : "未缴" }}</el-tag
+          :type="scope.row.handle_status ? 'success' : 'danger'"
+          >{{ scope.row.handle_status ? "已缴" : "未缴" }}</el-tag
         >
       </template>
     </el-table-column>
@@ -74,22 +74,19 @@
 import { onMounted } from "@vue/runtime-core";
 import { ElMessage } from "element-plus";
 import { ref } from "vue";
-import { queryBorrInfo } from "../api/index";
+import { queryFineInfo } from "../api/index";
 
 export default {
   setup() {
     const fineData = ref([]);
     const dataSize = ref(0); //数据总条数
     const queryData = ref({
-      book_id: "CEB3d406-7f3e-4cAF-85dd-d66Ef1eF15C3",
-      book_name: "《论节深带生》",
-      reader_name: "韩明",
-      card_id: "2b28DCc1-E4e4-411b-d230-82b89B44a9bC",
-      renew_new: 0,
-      borr_date: "2021-05-31",
-      due_date: "2021-06-20",
-      return_date: "2021-06-10",
-      return_status: false,
+      book_id: "",
+      book_name: "",
+      card_id: "",
+      reader_name: "",
+      borr_date: "",
+      due_date: "",
       page: 1,
       size: 10,
     });
@@ -109,10 +106,10 @@ export default {
     function getFineInfo() {
       let jsonData = JSON.stringify(queryData.value);
       console.log(jsonData);
-      queryBorrInfo(jsonData)
+      queryFineInfo(jsonData)
         .then((res) => {
           console.log(res);
-          fineData.value = [queryData.value, queryData.value];
+          fineData.value = res.data;
           dataSize.value = res.data_count;
         })
         .catch((failResponse) => {

@@ -3,14 +3,14 @@
   <el-row :gutter="20">
     <el-col :span="12">
       <div class="buttons-container">
-        <el-button type="success" plain>借出图书</el-button>
+        <el-button type="success" plain @click="borrowBook">借出图书</el-button>
         <el-button type="primary" plain>续借图书</el-button>
         <el-button type="danger" plain>缴纳罚金</el-button>
       </div>
     </el-col>
     <el-col :span="12">
       <div class="buttons-container">
-        <el-button type="warning" plain>还书入库</el-button>
+        <el-button type="warning" plain @click="returnBook">还书入库</el-button>
       </div>
     </el-col>
   </el-row>
@@ -28,7 +28,11 @@
           <el-button type="primary" @click="onQueryCard">查询</el-button>
         </el-form-item>
       </el-form>
-      <lib-card-des :card_id="card_id" @fun="getStatusFromCard"></lib-card-des>
+      <lib-card-des
+        :card_id="card_id"
+        @fun="getStatusFromCard"
+        ref="libCardDes"
+      ></lib-card-des>
       <books-on-loan :card_id="card_id" ref="booksOnLoan"></books-on-loan>
     </el-col>
     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12"
@@ -44,7 +48,11 @@
           <el-button type="primary" @click="onQueryBook">查询</el-button>
         </el-form-item>
       </el-form>
-      <book-des :book_id="book_id" @fun="getStatusFromCard"></book-des>
+      <book-des
+        :book_id="book_id"
+        @fun="getStatusFromCard"
+        ref="bookDes"
+      ></book-des>
     </el-col>
   </el-row>
 </template>
@@ -53,6 +61,8 @@
 import BookDes from "../components/BookDes.vue";
 import LibCardDes from "../components/LibCardDes.vue";
 import BooksOnLoan from "../components/BooksOnLoan";
+import { ElMessage } from "element-plus";
+import { getReturnBook, getBorrowBook } from "../api/index";
 import { ref } from "vue";
 export default {
   components: { LibCardDes, BookDes, BooksOnLoan },
@@ -63,16 +73,66 @@ export default {
       card: "",
       book: "",
     });
+    //子组件的实例
+    const libCardDes = ref();
+    const bookDes = ref();
     const booksOnLoan = ref();
+    //查询借阅卡信息
     function onQueryCard() {
       console.log("onQueryCard");
       card_id.value = queryForm.value.card;
-      booksOnLoan.value.getLoanBook();
+      libCardDes.value.getCard(queryForm.value.card);
+      booksOnLoan.value.getLoanBook(queryForm.value.card);
     }
+    //查询图书信息
     function onQueryBook() {
       console.log("onQueryBook");
       book_id.value = queryForm.value.book;
+      bookDes.value.getBook(queryForm.value.book);
     }
+    //还书入库
+    function returnBook() {
+      let params = new URLSearchParams();
+      params.append("book_id", queryForm.value.book);
+      console.log(params);
+      getReturnBook(params)
+        .then((res) => {
+          console.log(res);
+          if (res.success) {
+            ElMessage.success(res.msg);
+          } else {
+            ElMessage.error(res.msg);
+          }
+        })
+        .catch((failResponse) => {
+          console.log(failResponse);
+          ElMessage.error("获取信息失败，服务器错误，请联系管理员");
+          ElMessage.error(failResponse.statusText);
+        });
+    }
+    function borrowBook() {
+      let params = new URLSearchParams();
+      params.append("book_id", queryForm.value.book);
+      params.append("card_id", queryForm.value.card);
+      console.log(params);
+      getBorrowBook(params)
+        .then((res) => {
+          console.log(res);
+          if (res.success) {
+            ElMessage.success(res.msg);
+          } else {
+            ElMessage.error(res.msg);
+          }
+        })
+        .catch((failResponse) => {
+          console.log(failResponse);
+          ElMessage.error("获取信息失败，服务器错误，请联系管理员");
+          ElMessage.error(failResponse.statusText);
+        });
+    }
+    //借出图书
+    //续借图书
+    //缴纳罚金
     // 监听子组件抛出的借阅卡状态参数
     const getStatusFromCard = (e) => {
       console.log("子组件给的值：", e);
@@ -89,7 +149,11 @@ export default {
       queryForm,
       getStatusFromCard,
       getStatusFromBook,
+      libCardDes,
+      bookDes,
       booksOnLoan,
+      returnBook,
+      borrowBook,
     };
   },
 };
