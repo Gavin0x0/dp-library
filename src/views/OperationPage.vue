@@ -4,13 +4,13 @@
     <el-col :span="12">
       <div class="buttons-container">
         <el-button type="success" plain @click="borrowBook">借出图书</el-button>
-        <el-button type="primary" plain>续借图书</el-button>
-        <el-button type="danger" plain>缴纳罚金</el-button>
+        <el-button type="primary" plain @click="renewBook">续借图书</el-button>
       </div>
     </el-col>
     <el-col :span="12">
       <div class="buttons-container">
         <el-button type="warning" plain @click="returnBook">还书入库</el-button>
+        <el-button type="danger" plain @click="openPayFine">缴纳罚金</el-button>
       </div>
     </el-col>
   </el-row>
@@ -61,8 +61,13 @@
 import BookDes from "../components/BookDes.vue";
 import LibCardDes from "../components/LibCardDes.vue";
 import BooksOnLoan from "../components/BooksOnLoan";
-import { ElMessage } from "element-plus";
-import { getReturnBook, getBorrowBook } from "../api/index";
+import { ElMessage, ElMessageBox } from "element-plus";
+import {
+  getReturnBook,
+  getBorrowBook,
+  getPayFine,
+  getRenewBook,
+} from "../api/index";
 import { ref } from "vue";
 export default {
   components: { LibCardDes, BookDes, BooksOnLoan },
@@ -110,6 +115,8 @@ export default {
           ElMessage.error(failResponse.statusText);
         });
     }
+
+    //借出图书
     function borrowBook() {
       let params = new URLSearchParams();
       params.append("book_id", queryForm.value.book);
@@ -130,9 +137,58 @@ export default {
           ElMessage.error(failResponse.statusText);
         });
     }
-    //借出图书
     //续借图书
+    function renewBook() {
+      let params = new URLSearchParams();
+      params.append("book_id", queryForm.value.book);
+      getRenewBook(params)
+        .then((res) => {
+          console.log(res);
+          if (res.success) {
+            ElMessage.success(res.msg);
+          } else {
+            ElMessage.error(res.msg);
+          }
+        })
+        .catch((failResponse) => {
+          console.log(failResponse);
+          ElMessage.error("获取信息失败，服务器错误，请联系管理员");
+          ElMessage.error(failResponse.statusText);
+        });
+    }
+    //打开缴纳罚金窗口
+    function openPayFine() {
+      ElMessageBox.prompt("请输入缴纳的金额", "缴纳罚金", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+      })
+        .then(({ value }) => {
+          payFine(value);
+        })
+        .catch(() => {
+          ElMessage.error("取消缴纳罚金");
+        });
+    }
     //缴纳罚金
+    function payFine(value) {
+      let params = new URLSearchParams();
+      params.append("payment", value);
+      params.append("book_id", queryForm.value.book);
+      getPayFine(params)
+        .then((res) => {
+          console.log(res);
+          if (res.success) {
+            ElMessage.success(res.msg);
+          } else {
+            ElMessage.error(res.msg);
+          }
+        })
+        .catch((failResponse) => {
+          console.log(failResponse);
+          ElMessage.error("获取信息失败，服务器错误，请联系管理员");
+          ElMessage.error(failResponse.statusText);
+        });
+    }
     // 监听子组件抛出的借阅卡状态参数
     const getStatusFromCard = (e) => {
       console.log("子组件给的值：", e);
@@ -154,6 +210,9 @@ export default {
       booksOnLoan,
       returnBook,
       borrowBook,
+      renewBook,
+      payFine,
+      openPayFine,
     };
   },
 };

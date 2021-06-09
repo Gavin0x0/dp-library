@@ -1,5 +1,10 @@
 <template>
-  <el-descriptions title="借阅卡信息" :column="2" border style="width: 80%">
+  <el-descriptions
+    title="借阅卡信息"
+    :column="2"
+    border
+    style="width: 80%; margin-bottom: 30px"
+  >
     <el-descriptions-item>
       <template #label>
         <i class="el-icon-user"></i>

@@ -1,5 +1,12 @@
 <template>
   <h1>罚款管理</h1>
+  <el-button
+    type="primary"
+    plain
+    @click="generMockData"
+    style="margin-bottom: 20px"
+    >模拟经过了30天</el-button
+  >
   <el-table
     :data="fineData"
     style="width: 100%"
@@ -74,7 +81,7 @@
 import { onMounted } from "@vue/runtime-core";
 import { ElMessage } from "element-plus";
 import { ref } from "vue";
-import { queryFineInfo } from "../api/index";
+import { getUpdateFine, queryFineInfo } from "../api/index";
 
 export default {
   setup() {
@@ -118,10 +125,14 @@ export default {
           ElMessage.error(failResponse.statusText);
         });
     }
+    function generMockData() {
+      getUpdateFine();
+    }
     return {
       dataSize,
       queryData,
       fineData,
+      generMockData,
       handleSizeChange,
       handleCurrentChange,
     };

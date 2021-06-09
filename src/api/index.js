@@ -85,11 +85,31 @@ export const getLentBook = (params) => get(`getLentBook`, params);
 export const getReturnBook = (params) => get(`returnBook`, params);
 
 /**
- * 还书入库
+ * 借书
  * @param {URLSearchParams} params
  * @returns
  */
 export const getBorrowBook = (params) => get(`borrowBook`, params);
+
+/**
+ * 续借
+ * @param {URLSearchParams} params
+ * @returns
+ */
+export const getRenewBook = (params) => get(`renewBook`, params);
+
+/**
+ * 交罚款
+ * @param {URLSearchParams} params
+ * @returns
+ */
+export const getPayFine = (params) => get(`payFine`, params);
+/**
+ * 更新罚金（模拟）
+ * @param {URLSearchParams} params
+ * @returns
+ */
+export const getUpdateFine = () => get(`updateFine`);
 
 /**
  * 查询借阅信息（POST）

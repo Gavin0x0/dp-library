@@ -21,6 +21,13 @@
     <el-table-column prop="card_id" label="借阅卡编号" width="280">
     </el-table-column>
     <el-table-column
+      prop="renew_num"
+      label="续借次数"
+      width="100"
+      align="center"
+    >
+    </el-table-column>
+    <el-table-column
       prop="borr_date"
       label="借阅日期"
       width="100"
